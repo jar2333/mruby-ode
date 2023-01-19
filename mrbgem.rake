@@ -7,6 +7,7 @@ MRuby::Gem::Specification.new('mruby-ode') do |spec|
 
     # Install ode separately
     # See INSTALL.txt at https://bitbucket.org/odedevs/ode/src/master/
+    # Make sure to install to use the same floating point values as mruby itself.
     spec.linker.libraries << "ode"
 
     # Very likely too platform specific, revise later
