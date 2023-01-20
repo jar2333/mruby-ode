@@ -154,5 +154,6 @@ void append_World(mrb_state *mrb) {
     mrb_define_method(mrb, World_class, "cfm", World_get_cfm, MRB_ARGS_NONE());
 
     mrb_define_method(mrb, World_class, "auto_disable=", World_set_auto_disable_flag, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE());
+    mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE()); //add alias method with ?
+    
 }
