@@ -14,6 +14,10 @@ static const mrb_data_type World_type = {
   "World", World_free
 };
 
+/**
+ * Initialize
+*/
+
 mrb_value World_initialize(mrb_state *mrb, mrb_value self) {
 
     dWorldID id = (dWorldID)DATA_PTR(self);
@@ -29,6 +33,10 @@ mrb_value World_initialize(mrb_state *mrb, mrb_value self) {
 
     return self;
 }
+
+/**
+ * Gravity
+*/
 
 mrb_value World_set_gravity(mrb_state *mrb, mrb_value self) {
     dWorldID id = (dWorldID)DATA_PTR(self);
@@ -56,6 +64,10 @@ mrb_value World_get_gravity(mrb_state *mrb, mrb_value self) {
     return mrb_ary_new_from_values(mrb, 3, values);
 }
 
+/**
+ * ERB
+*/
+
 mrb_value World_set_erp(mrb_state *mrb, mrb_value self) {
     dWorldID id = (dWorldID)DATA_PTR(self);
 
@@ -75,6 +87,56 @@ mrb_value World_get_erp(mrb_state *mrb, mrb_value self) {
     return mrb_float_value(mrb, (mrb_float)erp);
 }
 
+/**
+ * CFM
+*/
+
+mrb_value World_set_cfm(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float cfm;
+    mrb_get_args(mrb, "f", &cfm);
+
+    dWorldSetERP(id, (dReal)cfm);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_cfm(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal cfm = dWorldGetCFM(id);
+
+    return mrb_float_value(mrb, (mrb_float)cfm);
+}
+
+/**
+ * Auto-disable parameters
+*/
+
+mrb_value World_set_auto_disable_flag(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_bool auto_disable;
+    mrb_get_args(mrb, "b", &auto_disable);
+
+    dWorldSetAutoDisableFlag(id, (int)auto_disable);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_auto_disable_flag(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    int auto_disable = dWorldGetAutoDisableFlag(id);
+
+    return mrb_bool_value((mrb_bool)auto_disable);
+}
+
+
+/**
+ * Add World class to mrb state
+*/
 
 void append_World(mrb_state *mrb) {
     World_class = mrb_define_class(mrb, "World", mrb->object_class);
@@ -88,4 +150,9 @@ void append_World(mrb_state *mrb) {
     mrb_define_method(mrb, World_class, "erp=", World_set_erp, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "erp", World_get_erp, MRB_ARGS_NONE());
 
+    mrb_define_method(mrb, World_class, "cfm=", World_set_cfm, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "cfm", World_get_cfm, MRB_ARGS_NONE());
+
+    mrb_define_method(mrb, World_class, "auto_disable=", World_set_auto_disable_flag, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE());
 }
