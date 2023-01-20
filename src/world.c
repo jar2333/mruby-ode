@@ -1,9 +1,7 @@
 #include <world.h>
 
 #include <mruby/class.h>
-#include <mruby/compile.h>
 #include <mruby/data.h>
-#include <mruby/variable.h>
 #include <mruby/array.h>
 
 #include <ode/ode.h>
@@ -64,5 +62,7 @@ void append_World(mrb_state *mrb) {
     World_class = mrb_define_class(mrb, "World", mrb->object_class);
     MRB_SET_INSTANCE_TT(World_class, MRB_TT_DATA);
 
-    mrb_define_method(mrb, World_class, "initialize", World_initialize, MRB_ARGS_REQ(0));
+    mrb_define_method(mrb, World_class, "initialize", World_initialize, MRB_ARGS_NONE());
+    mrb_define_method(mrb, World_class, "gravity=", World_set_gravity, MRB_ARGS_REQ(3));
+    mrb_define_method(mrb, World_class, "gravity", World_get_gravity, MRB_ARGS_NONE());
 }
