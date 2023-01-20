@@ -4,6 +4,7 @@
 #include <mruby/compile.h>
 #include <mruby/data.h>
 #include <mruby/variable.h>
+#include <mruby/array.h>
 
 #include <ode/ode.h>
 
@@ -53,7 +54,8 @@ mrb_value World_get_gravity(mrb_state *mrb, mrb_value self) {
     mrb_value y = mrb_float_value(mrb, gravity[1]);
     mrb_value z = mrb_float_value(mrb, gravity[2]);
 
-    //return array with 3 elements here
+    mrb_value values[3] = {x, y, z};
+    return mrb_ary_new_from_values(mrb, 3, values);
 
 }
 
