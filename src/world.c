@@ -14,6 +14,13 @@ static const mrb_data_type World_type = {
   "World", World_free
 };
 
+
+/**
+ * ==============================
+ * General functions
+ * ==============================
+*/
+
 /**
  * Initialize
 */
@@ -220,12 +227,45 @@ mrb_value World_get_auto_disable_time(mrb_state *mrb, mrb_value self) {
 }
 
 /**
+ * Impulse to Force
+*/
+
+mrb_value World_impulse_to_force(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float step_size, ix, iy, iz;
+    mrb_get_args(mrb, "ffff", &step_size, &ix, &iy, &iz);
+
+    dVector3 force;
+    dWorldImpulseToForce(id, (dReal)step_size, (dReal)ix, (dReal)iy, (dReal)iz, force);
+
+    mrb_value x = mrb_float_value(mrb, force[0]);
+    mrb_value y = mrb_float_value(mrb, force[1]);
+    mrb_value z = mrb_float_value(mrb, force[2]);
+
+    mrb_value values[3] = {x, y, z};
+    return mrb_ary_new_from_values(mrb, 3, values);
+}
+
+/**
+ * ==============================
+ * Stepping functions
+ * ==============================
+*/
+
+/**
+ * ===============================
  * Add World class to mrb state
+ * ===============================
 */
 
 void append_World(mrb_state *mrb) {
     World_class = mrb_define_class(mrb, "World", mrb->object_class);
     MRB_SET_INSTANCE_TT(World_class, MRB_TT_DATA);
+
+    /*
+    * General methods
+    */
 
     mrb_define_method(mrb, World_class, "initialize", World_initialize, MRB_ARGS_NONE());
 
@@ -250,4 +290,9 @@ void append_World(mrb_state *mrb) {
     mrb_define_method(mrb, World_class, "auto_disable_time=", World_set_auto_disable_time, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable_time", World_get_auto_disable_time, MRB_ARGS_NONE());
 
+    mrb_define_method(mrb, World_class, "impulse_to_force", World_get_gravity, MRB_ARGS_REQ(4));
+
+    /*
+    * Stepping methods
+    */
 }
