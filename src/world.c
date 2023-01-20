@@ -54,7 +54,25 @@ mrb_value World_get_gravity(mrb_state *mrb, mrb_value self) {
 
     mrb_value values[3] = {x, y, z};
     return mrb_ary_new_from_values(mrb, 3, values);
+}
 
+mrb_value World_set_erp(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float erp;
+    mrb_get_args(mrb, "f", &erp);
+
+    dWorldSetERP(id, (dReal)erp);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_erp(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal erp = dWorldGetERP(id);
+
+    return mrb_float_value(mrb, (mrb_float)erp);
 }
 
 
@@ -63,6 +81,11 @@ void append_World(mrb_state *mrb) {
     MRB_SET_INSTANCE_TT(World_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, World_class, "initialize", World_initialize, MRB_ARGS_NONE());
+
     mrb_define_method(mrb, World_class, "gravity=", World_set_gravity, MRB_ARGS_REQ(3));
     mrb_define_method(mrb, World_class, "gravity", World_get_gravity, MRB_ARGS_NONE());
+
+    mrb_define_method(mrb, World_class, "erp=", World_set_erp, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "erp", World_get_erp, MRB_ARGS_NONE());
+
 }
