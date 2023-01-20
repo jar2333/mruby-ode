@@ -290,7 +290,7 @@ void append_World(mrb_state *mrb) {
     mrb_define_method(mrb, World_class, "auto_disable_time=", World_set_auto_disable_time, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable_time", World_get_auto_disable_time, MRB_ARGS_NONE());
 
-    mrb_define_method(mrb, World_class, "impulse_to_force", World_get_gravity, MRB_ARGS_REQ(4));
+    mrb_define_method(mrb, World_class, "impulse_to_force", World_impulse_to_force, MRB_ARGS_REQ(4));
 
     /*
     * Stepping methods
