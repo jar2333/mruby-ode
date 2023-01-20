@@ -114,6 +114,8 @@ mrb_value World_get_cfm(mrb_state *mrb, mrb_value self) {
  * Auto-disable parameters
 */
 
+// Flag 
+
 mrb_value World_set_auto_disable_flag(mrb_state *mrb, mrb_value self) {
     dWorldID id = (dWorldID)DATA_PTR(self);
 
@@ -133,6 +135,89 @@ mrb_value World_get_auto_disable_flag(mrb_state *mrb, mrb_value self) {
     return mrb_bool_value((mrb_bool)auto_disable);
 }
 
+// Linear Threshold
+
+mrb_value World_set_auto_disable_linear_threshold(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float threshold;
+    mrb_get_args(mrb, "f", &threshold);
+
+    dWorldSetAutoDisableLinearThreshold(id, (dReal)threshold);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_auto_disable_linear_threshold(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal threshold = dWorldGetAutoDisableLinearThreshold(id);
+
+    return mrb_float_value(mrb, (mrb_float)threshold);
+}
+
+// Angular Threshold
+
+mrb_value World_set_auto_disable_angular_threshold(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float threshold;
+    mrb_get_args(mrb, "f", &threshold);
+
+    dWorldSetAutoDisableAngularThreshold(id, (dReal)threshold);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_auto_disable_angular_threshold(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal threshold = dWorldGetAutoDisableAngularThreshold(id);
+
+    return mrb_float_value(mrb, (mrb_float)threshold);
+}
+
+// Steps
+
+mrb_value World_set_auto_disable_steps(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_int steps;
+    mrb_get_args(mrb, "i", &steps);
+
+    dWorldSetAutoDisableSteps(id, (int)steps);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_auto_disable_steps(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    int steps = dWorldGetAutoDisableSteps(id);
+
+    return mrb_int_value(mrb, (mrb_int)steps);
+}
+
+// Time
+
+mrb_value World_set_auto_disable_time(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float time;
+    mrb_get_args(mrb, "f", &time);
+
+    dWorldSetAutoDisableTime(id, (dReal)time);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_auto_disable_time(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal time = dWorldGetAutoDisableTime(id);
+
+    return mrb_float_value(mrb, (mrb_float)time);
+}
 
 /**
  * Add World class to mrb state
@@ -153,7 +238,16 @@ void append_World(mrb_state *mrb) {
     mrb_define_method(mrb, World_class, "cfm=", World_set_cfm, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "cfm", World_get_cfm, MRB_ARGS_NONE());
 
+    //remove prefix? add alias? make module? revisit this code
     mrb_define_method(mrb, World_class, "auto_disable=", World_set_auto_disable_flag, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE()); //add alias method with ?
-    
+    mrb_define_method(mrb, World_class, "auto_disable_linear_threshold=", World_set_auto_disable_linear_threshold, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "auto_disable_linear_threshold", World_get_auto_disable_linear_threshold, MRB_ARGS_NONE());
+    mrb_define_method(mrb, World_class, "auto_disable_angular_threshold=", World_set_auto_disable_angular_threshold, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "auto_disable_angular_threshold", World_get_auto_disable_angular_threshold, MRB_ARGS_NONE());
+    mrb_define_method(mrb, World_class, "auto_disable_steps=", World_set_auto_disable_steps, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "auto_disable_steps", World_get_auto_disable_steps, MRB_ARGS_NONE());
+    mrb_define_method(mrb, World_class, "auto_disable_time=", World_set_auto_disable_time, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "auto_disable_time", World_get_auto_disable_time, MRB_ARGS_NONE());
+
 }
