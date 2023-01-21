@@ -1,4 +1,5 @@
 #include <world.h>
+#include <init.h>
 
 #include <mruby/class.h>
 #include <mruby/data.h>
@@ -11,7 +12,9 @@
 struct RClass *World_class;
 
 void World_free(mrb_state *mrb, void *id) {
-    dWorldDestroy((dWorldID)id);
+    if (is_ode_initialized_for_thread()) {
+        dWorldDestroy((dWorldID)id);
+    }
 }
 
 static const mrb_data_type World_type = {
@@ -497,8 +500,8 @@ mrb_value World_get_contact_surface_layer(mrb_state *mrb, mrb_value self) {
  * ===============================
 */
 
-void append_World(mrb_state *mrb) {
-    World_class = mrb_define_class(mrb, "World", mrb->object_class);
+void append_World(mrb_state *mrb, struct RClass *ode_module) {
+    World_class = mrb_define_class_under(mrb, ode_module, "World", mrb->object_class);
     MRB_SET_INSTANCE_TT(World_class, MRB_TT_DATA);
 
     /*
