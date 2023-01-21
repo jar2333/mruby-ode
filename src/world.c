@@ -439,6 +439,54 @@ mrb_value World_get_max_angular_speed(mrb_state *mrb, mrb_value self) {
 
 /**
  * ===============================
+ * Contact Parameters
+ * ===============================
+*/
+
+// Max correcting velocity
+
+mrb_value World_set_contact_max_correcting_velocity(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float velocity;
+    mrb_get_args(mrb, "f", &velocity);
+
+    dWorldSetContactMaxCorrectingVel(id, (dReal)velocity);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_contact_max_correcting_velocity(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal velocity = dWorldGetContactMaxCorrectingVel(id);
+
+    return mrb_float_value(mrb, (mrb_float)velocity);
+}
+
+// Contact surface layer
+
+mrb_value World_set_contact_surface_layer(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float depth;
+    mrb_get_args(mrb, "f", &depth);
+
+    dWorldSetContactSurfaceLayer(id, (dReal)depth);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_contact_surface_layer(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal depth = dWorldGetContactSurfaceLayer(id);
+
+    return mrb_float_value(mrb, (mrb_float)depth);
+}
+
+/**
+ * ===============================
  * Add World class to mrb state
  * ===============================
 */
@@ -466,12 +514,16 @@ void append_World(mrb_state *mrb) {
     mrb_define_method(mrb, World_class, "auto_disable=", World_set_auto_disable_flag, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE()); 
     mrb_define_alias(mrb, World_class, "auto_disable", "auto_disable?"); // Ruby convention
+
     mrb_define_method(mrb, World_class, "auto_disable_linear_threshold=", World_set_auto_disable_linear_threshold, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable_linear_threshold", World_get_auto_disable_linear_threshold, MRB_ARGS_NONE());
+
     mrb_define_method(mrb, World_class, "auto_disable_angular_threshold=", World_set_auto_disable_angular_threshold, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable_angular_threshold", World_get_auto_disable_angular_threshold, MRB_ARGS_NONE());
+
     mrb_define_method(mrb, World_class, "auto_disable_steps=", World_set_auto_disable_steps, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable_steps", World_get_auto_disable_steps, MRB_ARGS_NONE());
+
     mrb_define_method(mrb, World_class, "auto_disable_time=", World_set_auto_disable_time, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable_time", World_get_auto_disable_time, MRB_ARGS_NONE());
 
@@ -510,5 +562,16 @@ void append_World(mrb_state *mrb) {
 
     mrb_define_method(mrb, World_class, "max_angular_speed=", World_set_max_angular_speed, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "max_angular_speed", World_get_max_angular_speed, MRB_ARGS_NONE());
+
+    /*
+    * Contact parameters
+    */
+
+    mrb_define_method(mrb, World_class, "contact_max_correcting_velocity=", World_set_contact_max_correcting_velocity, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "contact_max_correcting_velocity", World_get_contact_max_correcting_velocity, MRB_ARGS_NONE());
+
+    mrb_define_method(mrb, World_class, "contact_surface_layer=", World_set_contact_surface_layer, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "contact_surface_layer", World_get_contact_surface_layer, MRB_ARGS_NONE());
+
 
 }
