@@ -7,8 +7,6 @@
 
 #include <ode/ode.h>
 
-#include <assert.h>
-
 struct RClass *World_class;
 
 /*
@@ -265,7 +263,6 @@ mrb_value World_impulse_to_force(mrb_state *mrb, mrb_value self) {
 
 mrb_value World_step(mrb_state *mrb, mrb_value self) {
     dWorldID id = (dWorldID)DATA_PTR(self);
-    assert(id != NULL);
 
     mrb_float step_size;
     mrb_get_args(mrb, "f", &step_size);
@@ -277,7 +274,6 @@ mrb_value World_step(mrb_state *mrb, mrb_value self) {
 
 mrb_value World_quick_step(mrb_state *mrb, mrb_value self) {
     dWorldID id = (dWorldID)DATA_PTR(self);
-    assert(id != NULL);
 
     mrb_float step_size;
     mrb_get_args(mrb, "f", &step_size);
