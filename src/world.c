@@ -253,6 +253,66 @@ mrb_value World_impulse_to_force(mrb_state *mrb, mrb_value self) {
  * ==============================
 */
 
+mrb_value World_step(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float step_size;
+    mrb_get_args(mrb, "f", &step_size);
+
+    dWorldStep(id, (dReal)step_size);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_quick_step(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float step_size;
+    mrb_get_args(mrb, "f", &step_size);
+
+    dWorldQuickStep(id, (dReal)step_size);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_set_quick_step_iterations(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_int iterations;
+    mrb_get_args(mrb, "i", &iterations);
+
+    dWorldSetQuickStepNumIterations(id, (int)iterations);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_quick_step_iterations(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    int iterations = dWorldGetQuickStepNumIterations(id);
+
+    return mrb_int_value(mrb, (mrb_int)iterations);
+}
+
+mrb_value World_set_quick_step_w(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float w;
+    mrb_get_args(mrb, "f", &w);
+
+    dWorldSetQuickStepW(id, (dReal)w);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_quick_step_w(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal w = dWorldGetQuickStepW(id);
+
+    return mrb_float_value(mrb, (mrb_float)w);
+}
+
 /**
  * ===============================
  * Add World class to mrb state
@@ -280,7 +340,8 @@ void append_World(mrb_state *mrb) {
 
     //remove prefix? add alias? make module? revisit this code
     mrb_define_method(mrb, World_class, "auto_disable=", World_set_auto_disable_flag, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE()); //add alias method with ?
+    mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE()); 
+    mrb_define_alias(mrb, World_class, "auto_disable", "auto_disable?"); // Ruby convention
     mrb_define_method(mrb, World_class, "auto_disable_linear_threshold=", World_set_auto_disable_linear_threshold, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable_linear_threshold", World_get_auto_disable_linear_threshold, MRB_ARGS_NONE());
     mrb_define_method(mrb, World_class, "auto_disable_angular_threshold=", World_set_auto_disable_angular_threshold, MRB_ARGS_REQ(1));
@@ -295,4 +356,20 @@ void append_World(mrb_state *mrb) {
     /*
     * Stepping methods
     */
+
+    mrb_define_method(mrb, World_class, "step!", World_step, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "quick_step!", World_quick_step, MRB_ARGS_REQ(1));
+
+    mrb_define_method(mrb, World_class, "quick_step_iterations=", World_set_quick_step_iterations, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "quick_step_iterations", World_get_quick_step_iterations, MRB_ARGS_NONE());
+
+    mrb_define_method(mrb, World_class, "quick_step_w=", World_set_quick_step_w, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "quick_step_w", World_get_quick_step_w, MRB_ARGS_NONE());
+
+    /*
+    * Damping
+    */
+
+
+
 }
