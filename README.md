@@ -1,6 +1,6 @@
 # mruby-ode
 
-mruby bindings for the Open Dynamics Library (ODE).
+mruby bindings for the Open Dynamics Engine library (ODE).
 
 Install ODE before trying to use this mrbgem:
 https://bitbucket.org/odedevs/ode/src/master/
