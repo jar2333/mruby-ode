@@ -314,6 +314,130 @@ mrb_value World_get_quick_step_w(mrb_state *mrb, mrb_value self) {
 }
 
 /**
+ * ==============================
+ * Damping
+ * ==============================
+*/
+
+// Linear Damping
+
+mrb_value World_set_linear_damping(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float scale;
+    mrb_get_args(mrb, "f", &scale);
+
+    dWorldSetLinearDamping(id, (dReal)scale);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_linear_damping(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal scale = dWorldGetLinearDamping(id);
+
+    return mrb_float_value(mrb, (mrb_float)scale);
+}
+
+// Angular Threshold
+
+mrb_value World_set_angular_damping(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float scale;
+    mrb_get_args(mrb, "f", &scale);
+
+    dWorldSetAngularDamping(id, (dReal)scale);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_angular_damping(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal scale = dWorldGetAngularDamping(id);
+
+    return mrb_float_value(mrb, (mrb_float)scale);
+}
+
+// Combined
+
+mrb_value World_set_damping(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float linear_scale, angular_scale;
+    mrb_get_args(mrb, "ff", &linear_scale, &angular_scale);
+
+    dWorldSetDamping(id, (dReal)linear_scale, (dReal)angular_scale);
+
+    return mrb_nil_value();
+}
+
+// Linear Threshold
+
+mrb_value World_set_linear_damping_threshold(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float threshold;
+    mrb_get_args(mrb, "f", &threshold);
+
+    dWorldSetLinearDampingThreshold(id, (dReal)threshold);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_linear_damping_threshold(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal threshold = dWorldGetLinearDampingThreshold(id);
+
+    return mrb_float_value(mrb, (mrb_float)threshold);
+}
+
+// Angular Threshold
+
+mrb_value World_set_angular_damping_threshold(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float threshold;
+    mrb_get_args(mrb, "f", &threshold);
+
+    dWorldSetAngularDampingThreshold(id, (dReal)threshold);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_angular_damping_threshold(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal threshold = dWorldGetAngularDampingThreshold(id);
+
+    return mrb_float_value(mrb, (mrb_float)threshold);
+}
+
+// Max angular speed
+
+mrb_value World_set_max_angular_speed(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    mrb_float max_speed;
+    mrb_get_args(mrb, "f", &max_speed);
+
+    dWorldSetMaxAngularSpeed(id, (dReal)max_speed);
+
+    return mrb_nil_value();
+}
+
+mrb_value World_get_max_angular_speed(mrb_state *mrb, mrb_value self) {
+    dWorldID id = (dWorldID)DATA_PTR(self);
+
+    dReal max_speed = dWorldGetMaxAngularSpeed(id);
+
+    return mrb_float_value(mrb, (mrb_float)max_speed);
+}
+
+/**
  * ===============================
  * Add World class to mrb state
  * ===============================
@@ -338,7 +462,7 @@ void append_World(mrb_state *mrb) {
     mrb_define_method(mrb, World_class, "cfm=", World_set_cfm, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "cfm", World_get_cfm, MRB_ARGS_NONE());
 
-    //remove prefix? add alias? make module? revisit this code
+    //remove prefix? make module? revisit this code
     mrb_define_method(mrb, World_class, "auto_disable=", World_set_auto_disable_flag, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE()); 
     mrb_define_alias(mrb, World_class, "auto_disable", "auto_disable?"); // Ruby convention
@@ -370,6 +494,21 @@ void append_World(mrb_state *mrb) {
     * Damping
     */
 
+    mrb_define_method(mrb, World_class, "linear_damping=", World_set_linear_damping, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "linear_damping", World_get_linear_damping, MRB_ARGS_NONE());
+ 
+    mrb_define_method(mrb, World_class, "angular_damping=", World_set_angular_damping, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "angular_damping", World_get_angular_damping, MRB_ARGS_NONE());
 
+    mrb_define_method(mrb, World_class, "damping=", World_set_damping, MRB_ARGS_REQ(2));
+
+    mrb_define_method(mrb, World_class, "linear_damping_threshold=", World_set_linear_damping_threshold, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "linear_damping_threshold", World_get_linear_damping_threshold, MRB_ARGS_NONE());
+
+    mrb_define_method(mrb, World_class, "angular_damping_threshold=", World_set_angular_damping_threshold, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "angular_damping_threshold", World_get_angular_damping_threshold, MRB_ARGS_NONE());
+
+    mrb_define_method(mrb, World_class, "max_angular_speed=", World_set_max_angular_speed, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, World_class, "max_angular_speed", World_get_max_angular_speed, MRB_ARGS_NONE());
 
 }
