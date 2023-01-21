@@ -5,6 +5,8 @@ MRuby::Gem::Specification.new('mruby-ode') do |spec|
 
     # spec.version = '0.0.1'
     
+    spec.cc.include_paths << "./include"
+
     # Add include paths for mruby headers
     # Assuming this repository is in mruby/mrbgems/mruby-ode directory:
     spec.cc.include_paths << "../../include"
