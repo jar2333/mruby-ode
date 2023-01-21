@@ -12,10 +12,11 @@ MRuby::Gem::Specification.new('mruby-ode') do |spec|
 
     # Install ode separately (for now)
     # See INSTALL.txt at https://bitbucket.org/odedevs/ode/src/master/
-    # Make sure to install to use the same floating point values as mruby itself.
+    # Make sure to install to use the same floating point values as mruby itself for maximum compatibility.
     spec.linker.libraries << "ode" 
 
-    # Very likely too platform specific, revise later
+    # Very likely too platform specific, revise later.
+    # This is where ODE is installed on Linux
     spec.linker.library_paths << "/usr/local/lib" 
     spec.cc.include_paths << "/usr/local/include"
   end
