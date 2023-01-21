@@ -1,5 +1,4 @@
 #include <ode/ode.h>
-#include <ode/odeinit.h>
 
 #include <mruby-ode.h>
 
@@ -18,7 +17,6 @@ void mrb_mruby_ode_gem_init(mrb_state* mrb) {
 }
 
 void mrb_mruby_ode_gem_final(mrb_state* mrb) {
-    is_initialized = 0;
-
+    ode_cleanup_for_thread();
     dCloseODE();
 }
