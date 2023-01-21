@@ -6,6 +6,10 @@
 
 #include <ode/ode.h>
 
+#include <assert.h>
+
+struct RClass *World_class;
+
 void World_free(mrb_state *mrb, void *id) {
     dWorldDestroy((dWorldID)id);
 }
@@ -255,6 +259,7 @@ mrb_value World_impulse_to_force(mrb_state *mrb, mrb_value self) {
 
 mrb_value World_step(mrb_state *mrb, mrb_value self) {
     dWorldID id = (dWorldID)DATA_PTR(self);
+    assert(id != NULL);
 
     mrb_float step_size;
     mrb_get_args(mrb, "f", &step_size);
@@ -266,6 +271,7 @@ mrb_value World_step(mrb_state *mrb, mrb_value self) {
 
 mrb_value World_quick_step(mrb_state *mrb, mrb_value self) {
     dWorldID id = (dWorldID)DATA_PTR(self);
+    assert(id != NULL);
 
     mrb_float step_size;
     mrb_get_args(mrb, "f", &step_size);
@@ -513,7 +519,7 @@ void append_World(mrb_state *mrb) {
     //remove prefix? make module? revisit this code
     mrb_define_method(mrb, World_class, "auto_disable=", World_set_auto_disable_flag, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable", World_get_auto_disable_flag, MRB_ARGS_NONE()); 
-    mrb_define_alias(mrb, World_class, "auto_disable", "auto_disable?"); // Ruby convention
+    mrb_define_alias(mrb, World_class, "auto_disable?", "auto_disable"); // Ruby convention
 
     mrb_define_method(mrb, World_class, "auto_disable_linear_threshold=", World_set_auto_disable_linear_threshold, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, World_class, "auto_disable_linear_threshold", World_get_auto_disable_linear_threshold, MRB_ARGS_NONE());
