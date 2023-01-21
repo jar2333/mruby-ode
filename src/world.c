@@ -11,6 +11,9 @@
 
 struct RClass *World_class;
 
+/*
+ * Called when the garbage collector tries to dispose of the object
+*/
 void World_free(mrb_state *mrb, void *id) {
     if (is_ode_initialized_for_thread()) {
         dWorldDestroy((dWorldID)id);
